@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using portfolio_backend.Context;
 using portfolio_backend.Models;
 
 namespace portfolio_backend.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class ProjectController(AppDbContext context) : ControllerBase
     {
         private readonly AppDbContext _context = context;
@@ -29,6 +30,7 @@ namespace portfolio_backend.Controllers
             return Ok(project);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Project>> AddProject(Project newProject)
         {
@@ -43,6 +45,7 @@ namespace portfolio_backend.Controllers
             return CreatedAtAction(nameof(GetProjectById), new { id = newProject.Id }, newProject);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProject(int id, Project updatedProject)
         {
@@ -64,6 +67,7 @@ namespace portfolio_backend.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {

@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using portfolio_backend.Context;
 using portfolio_backend.Models;
 
 namespace portfolio_backend.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class BlogPostController(AppDbContext context) : ControllerBase
     {
         private readonly AppDbContext _context = context;
@@ -30,6 +31,7 @@ namespace portfolio_backend.Controllers
             return Ok(blogPost);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<BlogPost>> AddBlogPost(BlogPost newBlogPost)
         {
@@ -44,6 +46,7 @@ namespace portfolio_backend.Controllers
             return CreatedAtAction(nameof(GetBlogPostById), new { id = newBlogPost.Id }, newBlogPost);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBlogPost(int id, BlogPost updatedBlogPost)
         {
@@ -61,6 +64,7 @@ namespace portfolio_backend.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlogPost(int id)
         {
